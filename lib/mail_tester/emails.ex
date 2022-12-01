@@ -5,8 +5,10 @@ defmodule MailTester.Emails do
 
   import Ecto.Query, warn: false
   alias MailTester.Repo
-
+  alias MailTester.Emails
   alias MailTester.Emails.Email
+  alias MailTester.Emails.EmailVersion
+  alias MailTester.Postmark
 
   @doc """
   Returns the list of emails.
@@ -36,6 +38,46 @@ defmodule MailTester.Emails do
 
   """
   def get_email!(id), do: Repo.get!(Email, id)
+
+  def get_or_create_email_version_by_template_alias(template_alias) do
+    case Postmark.get_template(template_alias) do
+      {:error, message} ->
+        {:error, message}
+
+      {:ok, template} ->
+        case Repo.get_by(Email, postmark_alias: template_alias) do
+          # First time our system is seeing this template, init the `email` and
+          # `email_version` records.
+          nil ->
+            {:ok, email} =
+              Emails.create_email(%{
+                postmark_alias: template_alias,
+                postmark_template_id: template["TemplateId"],
+                postmark_associated_server_id: template["AssociatedServerId"]
+              })
+
+            {:ok, email_version} =
+              Emails.create_email_version(%{
+                html_body: template["HtmlBody"],
+                text_body: template["TextBody"],
+                version_description: template["Subject"],
+                email_id: email.id
+              })
+
+            {:ok, %{email: email, email_version: email_version, template: template}}
+
+          # We know about this template, return the latest `email_version` for use.
+          email ->
+            query =
+              from v in EmailVersion,
+                order_by: [desc: v.inserted_at],
+                limit: 1
+
+            email_version = Repo.one(query) |> IO.inspect()
+            {:ok, %{email: email, email_version: email_version, template: template}}
+        end
+    end
+  end
 
   @doc """
   Creates a email.

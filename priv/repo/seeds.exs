@@ -9,3 +9,8 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+MailTester.Repo.insert!(%MailTester.Accounts.User{
+  email: "sergiotapiagutierrez@gmail.com",
+  hashed_password: "1234"
+})

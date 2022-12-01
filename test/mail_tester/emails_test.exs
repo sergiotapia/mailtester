@@ -205,7 +205,9 @@ defmodule MailTester.EmailsTest do
     test "create_email_performance/1 with valid data creates a email_performance" do
       valid_attrs = %{event_timestamp: ~N[2022-11-28 18:55:00], event_type: "some event_type"}
 
-      assert {:ok, %EmailPerformance{} = email_performance} = Emails.create_email_performance(valid_attrs)
+      assert {:ok, %EmailPerformance{} = email_performance} =
+               Emails.create_email_performance(valid_attrs)
+
       assert email_performance.event_timestamp == ~N[2022-11-28 18:55:00]
       assert email_performance.event_type == "some event_type"
     end
@@ -216,23 +218,35 @@ defmodule MailTester.EmailsTest do
 
     test "update_email_performance/2 with valid data updates the email_performance" do
       email_performance = email_performance_fixture()
-      update_attrs = %{event_timestamp: ~N[2022-11-29 18:55:00], event_type: "some updated event_type"}
 
-      assert {:ok, %EmailPerformance{} = email_performance} = Emails.update_email_performance(email_performance, update_attrs)
+      update_attrs = %{
+        event_timestamp: ~N[2022-11-29 18:55:00],
+        event_type: "some updated event_type"
+      }
+
+      assert {:ok, %EmailPerformance{} = email_performance} =
+               Emails.update_email_performance(email_performance, update_attrs)
+
       assert email_performance.event_timestamp == ~N[2022-11-29 18:55:00]
       assert email_performance.event_type == "some updated event_type"
     end
 
     test "update_email_performance/2 with invalid data returns error changeset" do
       email_performance = email_performance_fixture()
-      assert {:error, %Ecto.Changeset{}} = Emails.update_email_performance(email_performance, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Emails.update_email_performance(email_performance, @invalid_attrs)
+
       assert email_performance == Emails.get_email_performance!(email_performance.id)
     end
 
     test "delete_email_performance/1 deletes the email_performance" do
       email_performance = email_performance_fixture()
       assert {:ok, %EmailPerformance{}} = Emails.delete_email_performance(email_performance)
-      assert_raise Ecto.NoResultsError, fn -> Emails.get_email_performance!(email_performance.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Emails.get_email_performance!(email_performance.id)
+      end
     end
 
     test "change_email_performance/1 returns a email_performance changeset" do
