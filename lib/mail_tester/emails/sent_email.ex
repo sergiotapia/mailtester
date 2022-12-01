@@ -8,7 +8,7 @@ defmodule MailTester.Emails.SentEmail do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "sent_emails" do
-    field :sent_at, :naive_datetime
+    field :sent_at, :utc_datetime
 
     # Postmark's internal id for the sent email. We use
     # this field to match a webhook event data to a specific

@@ -20,6 +20,12 @@ defmodule MailTesterWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/webhooks", MailTesterWeb do
+    pipe_through :api
+
+    post "/emails", Webhooks.EmailController, :emails
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", MailTesterWeb do
   #   pipe_through :api

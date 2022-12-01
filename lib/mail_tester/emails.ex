@@ -271,6 +271,9 @@ defmodule MailTester.Emails do
   """
   def get_sent_email!(id), do: Repo.get!(SentEmail, id)
 
+  def get_sent_email_by_postmark_message_id!(postmark_message_id),
+    do: Repo.get_by!(SentEmail, postmark_message_id: postmark_message_id)
+
   @doc """
   Creates a sent_email.
 
