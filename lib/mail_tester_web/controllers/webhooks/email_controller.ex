@@ -14,10 +14,7 @@ defmodule MailTesterWeb.Webhooks.EmailController do
           :clicked
       end
 
-    IO.inspect(params["ReceivedAt"])
-    # It's a string: "2022-12-01T05:10:27Z"
-    {:ok, event_timestamp} = NaiveDateTime.from_iso8601(params["ReceivedAt"])
-    IO.inspect(event_timestamp)
+    {:ok, event_timestamp, 0} = DateTime.from_iso8601(params["ReceivedAt"])
 
     {:ok, _event_performance} =
       Emails.create_email_performance(%{

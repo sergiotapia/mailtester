@@ -73,7 +73,7 @@ defmodule MailTester.Emails do
                 order_by: [desc: v.inserted_at],
                 limit: 1
 
-            email_version = Repo.one(query) |> IO.inspect()
+            email_version = Repo.one(query)
             {:ok, %{email: email, email_version: email_version, template: template}}
         end
     end

@@ -6,12 +6,12 @@ defmodule MailTester.Emails.EmailPerformance do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "email_performances" do
-    field :event_timestamp, :naive_datetime
+    field :event_timestamp, :utc_datetime
     field :event_type, Ecto.Enum, values: [:clicked, :opened]
 
     belongs_to :sent_email, SentEmail
 
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   @doc false
